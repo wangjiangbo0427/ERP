@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>ESP信息管理系统</title>
+	<link rel="stylesheet" type="text/css" href="lib/elementui.css">
+	<link rel="stylesheet" type="text/css" href="css/index.css">
+	<script src="lib/axios.min.js"></script>
+	<script src="lib/vue.js"></script>
+	<script src="lib/elementui.js"></script>
+</head>
+<body>
+	<div id="wrap">
+		<el-header class="header" style="background-color: #409EFF;color:#fff;">
+			<h2>员工信息管理系统</h2>
+		</el-header>
+		<el-container>
+			<el-aside>
+				<el-menu>
+					<el-menu-item index = "1">
+						<a slot="title" class="el-icon-document" href="index.html">员工信息管理</a>
+					</el-menu-item>
+					<el-menu-item index = "2">
+						<a slot="title" class="el-icon-edit-outline" href="wage.html">员工薪资管理</a>
+					</el-menu-item>
+				</el-menu>
+			</el-aside>
+			<el-main>
+				<el-button type="success" size="small" style="float:right" @click="addbutton">添加</el-button>
+				<el-dialog :visible.sync="popup.visible" :message="popup.message" :title="popup.message">
+					<el-form label-width="80px" :model="popup.data" :rules="rules" ref="popup.data">
+						<el-form-item label="id" prop="id">
+							<el-input v-model="popup.data.id"></el-input>
+						</el-form-item>
+						<el-form-item label="姓名" prop="name">
+							<el-input v-model="popup.data.name"></el-input>
+						</el-form-item>
+						<el-form-item label="应发工资" prop="salary">
+							<el-input v-model="popup.data.salary"></el-input>
+						</el-form-item>
+						<el-form-item label="实发工资" prop="realWages">
+							<el-input v-model="popup.data.realWages"></el-input>
+						</el-form-item>
+						<el-form-item label="起始时间" prop="startDate">
+							<el-date-picker type="date" placeholder="起始时间" v-model="popup.data.startDate" value-format="yyyy-MM-dd"></el-date-picker>
+						</el-form-item>
+						<el-form-item label="是否结算" prop="setTlement">
+							<el-radio-group v-model="popup.data.setTlement">
+								<el-radio label="已结算"></el-radio>
+								<el-radio label="未结算"></el-radio>
+							</el-radio-group>
+						</el-form-item>
+						<el-form-item label="终止时间" v-if="popup.data.setTlement=='未结算'" prop="endDate">
+							<el-date-picker placeholder="请选择离职时间" v-model="popup.data.endDate" value-format="yyyy-MM-dd"></el-date-picker>
+						</el-form-item>
+						<el-form-item style="text-align: center;">
+							<el-button type="info" @click="cancle">取消</el-button>
+							<el-button type="success" @click="determine('popup.data')">提交</el-button>
+						</el-form-item>
+					</el-form>
+				</el-dialog>
+				<el-table :data="workerlistInfo">
+					<el-table-column prop="id" label="编号"></el-table-column>
+					<el-table-column prop="name" label="姓名"></el-table-column>
+					<el-table-column prop="salary" label="应发工资"></el-table-column>
+					<el-table-column prop="startDate" label="起止时间"></el-table-column>
+					<el-table-column prop="endDate" label="终止时间"></el-table-column>
+					<el-table-column prop="realWages" label="实发工资"></el-table-column>
+					<el-table-column prop="setTlement" label="是否结算">
+						<template slot-scope="data">
+							<el-tooltip :content="data.row.endDate" v-show="data.row.setTlement=='是'">
+								<span style="color:#F56C6C;">{{data.row.setTlement}}</span>
+							</el-tooltip>
+							<span v-show="data.row.setTlement=='否'">{{data.row.setTlement}}</span>
+						</template>
+					</el-table-column>
+					<el-table-column label="操作">
+						<template slot-scope="data">
+							<el-button type="primary" size="small" class="el-icon-edit" @click="editbutton(data.$index)"></el-button>
+							<el-button type="danger" size="small" class="el-icon-delete" @click="deleteworker(data)"></el-button>
+						</template>
+					</el-table-column>
+				</el-table>
+			</el-main>
+		</el-container>
+	</div>
+	<script src="js/wage.js"></script>
+</body>
+</html>

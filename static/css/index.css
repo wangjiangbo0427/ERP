@@ -1,0 +1,10 @@
+*{margin: 0;padding: 0;}
+li{list-style: none;}
+a{
+	!important;
+	text-decoration: none;
+}
+#wrap .header{
+	line-height: 60px;
+}
+.danger{color: #F56C6C;}
